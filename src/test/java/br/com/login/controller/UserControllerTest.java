@@ -2,58 +2,77 @@ package br.com.login.controller;
 
 import br.com.login.model.Usuario;
 import br.com.login.repository.UsuarioRepository;
-import org.junit.After;
-import org.junit.AfterClass;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-/**
- *
- * @author fernando
- */
+import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+
+
+@AutoConfigureMockMvc
+@RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
+
+    @Mock
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Mock
+    private UsuarioRepository usuarioRepository;
+
+    @Mock
+    private Logger log;
+    @InjectMocks
+    private UserController userController;
 
     public UserControllerTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
+        bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
-    @After
-    public void tearDown() {
-    }
-
-    /**
-     * Test of signUp method, of class UserController.
-     */
     @Test
     public void testSignUp() {
         System.out.println("signUp");
-        Usuario user = new Usuario();
+        ResponseEntity r = ResponseEntity.ok().build();
+        Usuario usuario = getUser();
+        usuario.setPassword(bCryptPasswordEncoder.encode(usuario.getPassword()));
+        assertEquals(userController.signUp(usuario), r);
 
-        user.setPassword("123");
-        user.setId(1);
-        user.setEmail("discolaser@gmail.com");
-        user.setEnable(true);
-        user.setPerfil("A");
+    }
 
-//        UserController instance = new UserController(new BCryptPasswordEncoder());
-//        instance.signUp(user);
-//        instance.signUp(user);
+    @Test
+    public void testSignupException() {
+        Usuario usuario = new Usuario();
+        ResponseEntity r = ResponseEntity.badRequest().build();
+//        when(userController.signUp(any())).thenReturn(eq(r));
+//        //doThrow(new NullPointerException()).when(userController.signUp(any())).getStatusCode();
+//        spy(userController.signUp(any()));
+        assertEquals(userController.signUp(usuario), r);
 
-// TODO review the generated test code and remove the default call to fail.
+    }
+
+
+    private Usuario getUser() {
+        Usuario usuario = new Usuario();
+
+        usuario.setPassword("123");
+        usuario.setId(1);
+        usuario.setEmail("discolaser@gmail.com");
+        usuario.setEnable(true);
+        usuario.setPerfil("A");
+
+        return usuario;
     }
 
 }
