@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 /**
- *
  * @author fernando
  */
 @Entity
@@ -27,8 +26,6 @@ public class Usuario implements Serializable {
     @Size(max = 100)
     @Column(name = "username")
     private String username;
-//    @Column(name = "name")
-//    private String name;
     @Size(max = 100)
     @Column(name = "password")
     private String password;

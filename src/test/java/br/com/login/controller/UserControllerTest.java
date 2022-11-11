@@ -55,9 +55,6 @@ public class UserControllerTest {
     public void testSignupException() {
         Usuario usuario = new Usuario();
         ResponseEntity r = ResponseEntity.badRequest().build();
-//        when(userController.signUp(any())).thenReturn(eq(r));
-//        //doThrow(new NullPointerException()).when(userController.signUp(any())).getStatusCode();
-//        spy(userController.signUp(any()));
         assertEquals(userController.signUp(usuario), r);
 
     }
